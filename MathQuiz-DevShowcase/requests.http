@@ -1,0 +1,49 @@
+### 1. Criar aluno (Profile)
+POST http://localhost:8080/api/profiles
+Content-Type: application/json
+
+{
+  "name": "Maria",
+  "email": "maria@email.com"
+}
+
+### 2. Criar categoria (Technology)
+POST http://localhost:8080/api/technologies
+Content-Type: application/json
+
+{
+  "name": "Porcentagem"
+}
+
+### 3. Criar pergunta/quiz (Project)
+POST http://localhost:8080/api/projects
+Content-Type: application/json
+
+{
+  "title": "Quiz de Porcentagem",
+  "question": "Quanto é 25% de 200? A) 25 B) 40 C) 50 D) 75",
+  "correctAnswer": "C",
+  "profileId": 1,
+  "technologyIds": [1]
+}
+
+### 4. Registrar resposta do aluno (Feedback)
+POST http://localhost:8080/feedbacks
+Content-Type: application/json
+
+{
+  "projectId": 1,
+  "studentAnswer": "C"
+}
+
+### 5. Listar alunos
+GET http://localhost:8080/profiles
+
+### 6. Listar categorias
+GET http://localhost:8080/technologies
+
+### 7. Listar quizzes
+GET http://localhost:8080/projects
+
+### 8. Listar resultados
+GET http://localhost:8080/feedbacks
