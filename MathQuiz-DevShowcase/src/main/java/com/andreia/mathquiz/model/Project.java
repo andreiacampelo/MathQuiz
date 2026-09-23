@@ -1,45 +1,35 @@
 package com.andreia.mathquiz.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.*;
 
 @Entity
 public class Project {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private String title;
-
     @Column(nullable = false, length = 1000)
     private String question;
-
     @Column(nullable = false)
     private String correctAnswer;
+    private Integer upvotes = 0;
+    private Double mediaAvaliacoes = 0.0;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Feedback> feedbacks = new ArrayList<>();
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @ManyToMany
-    @JoinTable(
-        name = "project_technology",
-        joinColumns = @JoinColumn(name = "project_id"),
-        inverseJoinColumns = @JoinColumn(name = "technology_id")
-    )
+    @JoinTable(name = "project_technology", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "technology_id"))
     private Set<Technology> technologies = new HashSet<>();
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Feedback> feedbacks = new ArrayList<>();
-
     public Project() {}
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getTitle() { return title; }
@@ -54,4 +44,8 @@ public class Project {
     public void setTechnologies(Set<Technology> technologies) { this.technologies = technologies; }
     public List<Feedback> getFeedbacks() { return feedbacks; }
     public void setFeedbacks(List<Feedback> feedbacks) { this.feedbacks = feedbacks; }
+    public Integer getUpvotes() { return upvotes; }
+    public void setUpvotes(Integer upvotes) { this.upvotes = upvotes; }
+    public Double getMediaAvaliacoes() { return mediaAvaliacoes; }
+    public void setMediaAvaliacoes(Double mediaAvaliacoes) { this.mediaAvaliacoes = mediaAvaliacoes; }
 }

@@ -1,17 +1,37 @@
 package com.andreia.mathquiz.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Map> handle404(EntityNotFoundException ex){
+        return ResponseEntity.status(404).body(Map.of(
+            "status", 404,
+            "erro", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map> handle400(MethodArgumentNotValidException ex){
+        String msg = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+        return ResponseEntity.status(400).body(Map.of(
+            "status", 400,
+            "erro", "Bad Request",
+            "detalhes", msg
+        ));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleIllegalArgument(IllegalArgumentException ex) {
-        return Map.of("erro", ex.getMessage());
+    public ResponseEntity<Map> handleBad(IllegalArgumentException ex){
+        return ResponseEntity.status(400).body(Map.of(
+            "status", 400,
+            "erro", ex.getMessage()
+        ));
     }
 }
